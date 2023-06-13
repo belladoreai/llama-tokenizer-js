@@ -100,7 +100,7 @@ const App = () => {
             justifyContent: "right",
           }}
         >
-          <a href="https://www.npmjs.com/package/llama-tokenizer-js" target="_blank" style="margin: 10px;">
+          <a href="https://www.npmjs.com/package/llama-tokenizer-js" target="_blank" style={{margin: "10px"}}>
             <img src="npm.png" alt="GitHub logo" width="100" />
           </a>
           <a href="https://github.com/belladoreai/llama-tokenizer-js" target="_blank">
