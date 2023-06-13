@@ -18,7 +18,7 @@ if (typeof window !== 'undefined') {
 }
 
 const base64decode = function(encodedString) {
-    if (typeof window !== "undefined") return window.atob(encodedString)
+    if (typeof globalThis !== "undefined") return globalThis.atob(encodedString)
     return Buffer.from(encodedString, 'base64').toString('latin1')
 }
 
