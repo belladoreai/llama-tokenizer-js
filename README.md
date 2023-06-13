@@ -4,6 +4,8 @@ The first JavaScript tokenizer for LLaMA which works client-side in the browser 
 
 Intended use case is calculating token count accurately on the client-side.
 
+<a href="https://belladoreai.github.io/llama-tokenizer-js/example-demo/build/">Click here for example-demo</a>
+
 Features:
 - Easy to use: 0 dependencies, code and data baked into a single file.
 - Compatible with most LLaMA-based models (see [Compatibility](#compatibility))
@@ -27,7 +29,7 @@ console.log(llamaTokenizer.encode("Hello world!").length)
 Option 2: Load as ES6 module with `<script>` tags in your HTML
 
 ```
-<script type="module" src="https://raw.githubusercontent.com/belladoreai/llama-tokenizer-js/master/llama-tokenizer.js"></script>
+<script type="module" src="https://belladoreai.github.io/llama-tokenizer-js/llama-tokenizer.js"></script>
 ```
 
 ## Usage
@@ -39,7 +41,7 @@ When used in browser, llama-tokenizer-js pollutes global namespace with `llamaTo
 Encode:
 
 ```
-llamaTokenizer.encode("Hello world")
+llamaTokenizer.encode("Hello world!")
 > [1, 15043, 3186, 29991]
 ```
 
@@ -83,4 +85,4 @@ Incompatible models are those which have been trained from scratch, not on top o
 
 You are free to use llama-tokenizer-js for basically whatever you want (MIT license).
 
-You are not required to give anything in exchange, but I kindly ask that you link to [https://belladore.ai/tools](https://belladore.ai/tools) in an appropriate place in your website. For example, you might link with the text "Using llama-tokenizer-js by belladore.ai" or something similar.
+You are not required to give anything in exchange, but I kindly ask that you give back by linking to [https://belladore.ai/tools](https://belladore.ai/tools) in an appropriate place in your website. For example, you might link with the text "Using llama-tokenizer-js by belladore.ai" or something similar.
