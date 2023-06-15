@@ -52,6 +52,13 @@ llamaTokenizer.decode([1, 15043, 3186, 29991])
 > 'Hello world!'
 ```
 
+Special use case: decode only selected individual tokens, without including beginning of prompt token and preceeding space:
+
+```
+llamaTokenizer.decode([3186], false, false)
+> 'Hello'
+```
+
 ## Tests
 
 You can run tests with:

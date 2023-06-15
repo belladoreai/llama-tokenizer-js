@@ -44,9 +44,7 @@ const TokenizedText = ({ tokens }) => (
       >
         {
           <pre>
-            {String(token)
-              .replaceAll(" ", "\u00A0")
-              .replaceAll("\n", "<newline>")}
+            {String(token).replaceAll(" ", "\u00A0")}
           </pre>
         }
       </span>
@@ -61,7 +59,14 @@ const App = () => {
 
   const encodedTokens = llamaTokenizer.encode(inputText);
 
-  const decodedTokens = encodedTokens.map(token => llamaTokenizer.decode([token], false, false));
+  const decodedTokens = encodedTokens.map(token => {
+    const chars = llamaTokenizer.decode([token], false, false)
+    if (token === 0) return "<unk>"
+    if (token === 1) return "<s>"
+    if (token === 2) return "</s>"
+    if (token >= 3 && token <= 258) return llamaTokenizer.vocabById[token]
+    return chars
+  })
 
   return (
     <>
