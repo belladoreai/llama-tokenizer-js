@@ -80,13 +80,67 @@ As mentioned, llama-tokenizer-js is the first JavaScript tokenizer for LLaMA whi
 
 ## Compatibility
 
-The tokenizer is the same for all LLaMA models which have been trained on top of the checkpoints (model weights) leaked by Facebook in early 2023.
+The tokenizer used by LLaMA is a SentencePiece Byte-Pair Encoding tokenizer.
+
+Note that this is a tokenizer for LLaMA models, and it's different than the tokenizers used by OpenAI models. If you need a tokenizer for OpenAI models, I recommend [gpt-tokenizer](https://www.npmjs.com/package/gpt-tokenizer).
+
+What is this tokenizer compatible with? All LLaMA models which have been trained on top of the checkpoints (model weights) leaked by Facebook in early 2023.
 
 Examples of compatible models:
 - wizard-vicuna-13b-uncensored-gptq
 - manticore-7b-ggml
 
-Incompatible models are those which have been trained from scratch, not on top of the checkpoints leaked by Facebook. For example, [OpenLLaMA](https://github.com/openlm-research/open_llama) models are incompatible. I'd be happy to adapt this to any LLaMA models that people need, just open an issue for it.
+Incompatible LLaMA models are those which have been trained from scratch, not on top of the checkpoints leaked by Facebook. For example, [OpenLLaMA](https://github.com/openlm-research/open_llama) models are incompatible.
+
+When you see a new LLaMA model released, this tokenizer is mostly likely compatible with it without any modifications. If you are unsure, try it and see if the token ids are the same (compared to running the model with, for example, oobabooga webui). You can find great test input/output samples by searching for `runTests` inside `llama-tokenizer.js`.
+
+If a LLaMA tokenizer has been trained from scratch, and you want to modify this library to support it, you should be able to do so by swapping the vocabulary and merge data (the 2 long variables near the end of `llama-tokenizer.js` file). Below is Python code that you can use for this.
+
+```
+# Load the tokenizer.json file that was distributed with the LLaMA model
+d = None
+with open(r"tokenizer.json", 'r', encoding='utf-8') as f:
+    d = json.load(f)
+ 
+# Extract the vocabulary as a list of token strings
+vocab = []
+for token in d['model']['vocab']:
+    vocab.append(token)
+ 
+# Transform the vocabulary into a UTF-8 String delimited by line breaks, base64 encode it, and save to a file
+with open('vocab_base64.txt', 'wb') as f:
+    f.write(base64.b64encode(('\n').join(vocab).encode("utf-8")))
+ 
+# Extract the merge data as a list of strings, where location in list indicates priority of merge.
+# Example: one merge might be "gr a" (indicating that "gr" and "a" merge into "gra")
+merges = []
+for merge in d['model']['merges']:
+    merges.append(merge)
+ 
+# Create helper map where keys are token Strings, values are their positions in the vocab.
+# Note that positions of the vocabulary do not have any special meaning in the tokenizer,
+# we are merely using them to aid with compressing the data.
+vocab_map = {}
+for i,v in enumerate(vocab):
+    vocab_map[v] = i
+ 
+# Each merge can be represented with 2 integers, e.g. "merge the 5th and the 11th token in vocab".
+# Since the vocabulary has fewer than 2^16 entries, each integer can be represented with 16 bits (2 bytes).
+# We are going to compress the merge data into a binary format, where
+# the first 4 bytes define the first merge, the next 4 bytes define the second merge, and so on.
+integers = []
+for merge in merges:
+    f, t = merge.split(" ")
+    integers.append(vocab_map[f])
+    integers.append(vocab_map[t])
+ 
+# Pack the integers into bytes using the 'H' format (2 bytes per integer)
+byte_array = struct.pack(f'{len(integers)}H', *integers)
+ 
+# Save the byte array as base64 encoded file
+with open('merges_binary.bin', 'wb') as file:
+    file.write(base64.b64encode(byte_array))
+```
 
 ## Credit
 
