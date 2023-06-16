@@ -94,7 +94,9 @@ Incompatible LLaMA models are those which have been trained from scratch, not on
 
 When you see a new LLaMA model released, this tokenizer is mostly likely compatible with it without any modifications. If you are unsure, try it and see if the token ids are the same (compared to running the model with, for example, oobabooga webui). You can find great test input/output samples by searching for `runTests` inside `llama-tokenizer.js`.
 
-If a LLaMA tokenizer has been trained from scratch, and you want to modify this library to support it, you should be able to do so by swapping the vocabulary and merge data (the 2 long variables near the end of `llama-tokenizer.js` file). Below is Python code that you can use for this.
+## Adding support for incompatible LLaMA models
+
+If you want to modify this library to support a new LLaMA tokenizer (new as in trained from scratch, not using the same tokenizer as most LLaMA models do), you should be able to do so by swapping the vocabulary and merge data (the 2 long variables near the end of `llama-tokenizer.js` file). Below is Python code that you can use for this.
 
 ```
 # Load the tokenizer.json file that was distributed with the LLaMA model
