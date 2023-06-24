@@ -233,7 +233,10 @@ const encode = (prompt, add_bos_token=true, add_preceding_space=true, log_perfor
     })
     const addToMergeQueue = function(leftNode) {
         const mergeIdentifierString = getMergeIdentifierString(leftNode.tokenId, leftNode.next.tokenId)
-        const mergePrio = llamaTokenizer.merges.get(mergeIdentifierString)
+        // Merge priority is primarily determined by the location of the merge in the "merges" data,
+        // secondarily determined by the relative position of the node in the linked list
+        // (We want to perform equal merges from left to right)
+        const mergePrio = llamaTokenizer.merges.get(mergeIdentifierString) * 100000 + leftNode.origPos
         if (mergePrio) {
             // If mergePrio not found in merges, that means this merge is not possible according to vocabulary.
             leftNode.mergePrio = mergePrio
@@ -244,6 +247,7 @@ const encode = (prompt, add_bos_token=true, add_preceding_space=true, log_perfor
 
     // Fill merge queue from initial merge possibilities and construct linked list
     let firstTokenNode = {
+        origPos: 0,
         tokenId: tokenIds[0],
         prev: null,
         next: null,
@@ -251,6 +255,7 @@ const encode = (prompt, add_bos_token=true, add_preceding_space=true, log_perfor
     let prevTokenNode = firstTokenNode
     for (let i=1; i<tokenIds.length; i++) {
         const currTokenNode = {
+            origPos: i,
             tokenId: tokenIds[i],
             prev: prevTokenNode,
             next: null
@@ -278,6 +283,7 @@ const encode = (prompt, add_bos_token=true, add_preceding_space=true, log_perfor
             oldPrev.deleted = true
             // Replace oldPrev within the linked list with a copy of itself
             const newPrev = {
+                origPos: oldPrev.origPos,
                 tokenId: oldPrev.tokenId,
                 prev: oldPrev.prev,
                 next: oldPrev.next
@@ -293,6 +299,7 @@ const encode = (prompt, add_bos_token=true, add_preceding_space=true, log_perfor
         }
         // Create node representing merge result
         const resultOfMerge = {
+            origPos: leftOfMerge.origPos,
             tokenId: llamaTokenizer.vocabByString.get(leftOfMerge.mergeToString),
             prev: leftOfMerge.prev,
             next: leftOfMerge.next.next
@@ -380,6 +387,9 @@ function runTests() {
     testCase("\n",                                [1, 29871,  13])
     testCase(" \n",                               [1, 259,    13])
     testCase("	tabs				out here",    [1, 29871,  12,     21175,  12,     12,     12,     12,     449,    1244])
+
+    // Equal prio merges are performed left-to-right (fixed in 1.1.1)
+    testCase("ax\n####\nboo",                     [1, 4853,   13,     4136,   13,     833,    29877])
 
     // UTF-8 multipoint character that should be found in vocabulary
     testCase('镇',                                [1, 29871,  30411])
