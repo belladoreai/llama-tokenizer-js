@@ -6,7 +6,8 @@ Intended use case is calculating token count accurately on the client-side.
 
 <a href="https://belladoreai.github.io/llama-tokenizer-js/example-demo/build/">Click here for demo</a>
 
-Features:
+## Features
+
 - Easy to use: 0 dependencies, code and data baked into a single file.
 - Compatible with most LLaMA-based models (see [Compatibility](#compatibility))
 - Optimized running time: tokenize a sentence in roughly 1ms, or 2000 tokens in roughly 20ms.
@@ -52,7 +53,7 @@ llamaTokenizer.decode([1, 15043, 3186, 29991])
 > 'Hello world!'
 ```
 
-Special use case: decode only selected individual tokens, without including beginning of prompt token and preceeding space:
+Note that special "beginning of sentence" token and preceding space are added by default when encoded (and correspondingly expected when decoding). These affect token count. There may be some use cases where you don't want to add these. You can pass additional boolean parameters in these use cases. For example, if you want to decode an individual token:
 
 ```
 llamaTokenizer.decode([3186], false, false)
