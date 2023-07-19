@@ -9,7 +9,7 @@ Intended use case is calculating token count accurately on the client-side.
 ## Features
 
 - Easy to use: 0 dependencies, code and data baked into a single file.
-- Compatible with most LLaMA-based models (see [Compatibility](#compatibility))
+- Compatible with most LLaMA models (see [Compatibility](#compatibility))
 - Optimized running time: tokenize a sentence in roughly 1ms, or 2000 tokens in roughly 20ms.
 - Optimized bundle size: 670KiB before minification and gzipping (the heaviest part of the tokenizer, merge data, has been compressed into a simple and efficient binary format, and then base64-encoded to bake it into the .js file)
 
@@ -85,13 +85,14 @@ The tokenizer used by LLaMA is a SentencePiece Byte-Pair Encoding tokenizer.
 
 Note that this is a tokenizer for LLaMA models, and it's different than the tokenizers used by OpenAI models. If you need a tokenizer for OpenAI models, I recommend [gpt-tokenizer](https://www.npmjs.com/package/gpt-tokenizer).
 
-What is this tokenizer compatible with? All LLaMA models which have been trained on top of the checkpoints (model weights) leaked by Facebook in early 2023.
+What is this tokenizer compatible with? All LLaMA models which have been trained on top of checkpoints (model weights) released by Facebook in March 2023 ("LLaMA") and July of 2023 ("LLaMA2").
 
 Examples of compatible models:
+- llama2-13b-4bit-gptq
 - wizard-vicuna-13b-uncensored-gptq
 - manticore-7b-ggml
 
-Incompatible LLaMA models are those which have been trained from scratch, not on top of the checkpoints leaked by Facebook. For example, [OpenLLaMA](https://github.com/openlm-research/open_llama) models are incompatible.
+Incompatible LLaMA models are those which have been trained from scratch, not on top of the checkpoints released by Facebook. For example, [OpenLLaMA](https://github.com/openlm-research/open_llama) models are incompatible.
 
 When you see a new LLaMA model released, this tokenizer is mostly likely compatible with it without any modifications. If you are unsure, try it and see if the token ids are the same (compared to running the model with, for example, oobabooga webui). You can find great test input/output samples by searching for `runTests` inside `llama-tokenizer.js`.
 
