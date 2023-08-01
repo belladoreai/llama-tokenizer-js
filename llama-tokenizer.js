@@ -216,7 +216,11 @@ const mapCharactersToTokenIds = (prompt, add_bos_token, add_preceding_space) => 
 
 const encode = (prompt, add_bos_token=true, add_preceding_space=true, log_performance=false) => {
 
-    const startTime = performance.now()
+    let startTime = null
+    if (log_performance) {
+        startTime = performance.now()
+    }
+
     if (!llamaTokenizer.vocabById || !llamaTokenizer.vocabByString || !llamaTokenizer.merges) {
         console.log('Tokenizer not initialized properly!')
         return
