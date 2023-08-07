@@ -137,7 +137,7 @@ class PriorityQueue {
     }
     replace(value) {
         const replacedValue = this.peek();
-        this._heap[top] = value;
+        this._heap[0] = value;
         this._siftDown();
         return replacedValue;
     }
