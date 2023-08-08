@@ -240,10 +240,7 @@ const encode = (prompt, add_bos_token=true, add_preceding_space=true, log_perfor
         // Merge priority is primarily determined by the location of the merge in the "merges" data,
         // secondarily determined by the relative position of the node in the linked list
         // (We want to perform equal merges from left to right)
-        // We use a bit hacky 10000 multiplier and 10000 divider in order to pack both primary and
-        // secondary priority into the same number, while avoiding numerical instability issues
-        // (if we instead just had a 1000000000 multiplier and no divider, we would get instability issues)
-        const mergePrio = llamaTokenizer.merges.get(mergeIdentifierString) * 100000 + leftNode.origPos / 100000
+        const mergePrio = llamaTokenizer.merges.get(mergeIdentifierString) + leftNode.origPos / prompt.length
         if (mergePrio) {
             // If mergePrio not found in merges, that means this merge is not possible according to vocabulary.
             leftNode.mergePrio = mergePrio
