@@ -6,7 +6,7 @@ Intended use case is calculating token count accurately on the client-side.
 
 <a href="https://belladoreai.github.io/llama-tokenizer-js/example-demo/build/">Click here for demo</a>
 
-Brought to you by [belladore.ai](https://belladore.ai)
+Developed by [belladore.ai](https://belladore.ai)
 
 ## Features
 
