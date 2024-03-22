@@ -52,11 +52,12 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--secondary));
+  background: hsl(var(--primary));
+  opacity: 0.2;
   border-radius: 3px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary));
+  opacity: 1.0;
 }

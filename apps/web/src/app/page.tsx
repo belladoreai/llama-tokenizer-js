@@ -81,10 +81,10 @@ export default function Page() {
 
         <div className="flex justify-end mt-8 gap-2 items-center">
           <a href="https://www.npmjs.com/package/llama-tokenizer-js" target="_blank">
-            <Image src="/npm.png" alt="npm logo" width={100} height={40} />
+            <Image src="/llama-tokenizer-js/npm.png" alt="npm logo" width={100} height={40} />
           </a>
           <a href="https://github.com/belladoreai/llama-tokenizer-js" target="_blank">
-            <Image src="/github.png" alt="GitHub logo" width={100} height={40} />
+            <Image src="/llama-tokenizer-js/github.png" alt="GitHub logo" width={100} height={40} />
           </a>
         </div>
       </div>
