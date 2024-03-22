@@ -4,7 +4,7 @@ JavaScript tokenizer for LLaMA which works client-side in the browser (and also 
 
 Intended use case is calculating token count accurately on the client-side.
 
-<a href="https://belladoreai.github.io/llama-tokenizer-js/example-demo/build/">Click here for demo</a>
+<a href="https://belladoreai.github.io/llama-tokenizer-js">Click here for demo</a>
 
 Developed by [belladore.ai](https://belladore.ai)
 
