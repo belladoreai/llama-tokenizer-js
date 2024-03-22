@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@repo/llama-tokenizer": "workspace:*",
+    "llama-tokenizer-js": "workspace:*",
     "@vercel/analytics": "^1.1.2",
     "next": "14.1.0",
     "react": "^18",

@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import { LlamaTokenizer } from "@repo/llama-tokenizer";
+import { LlamaTokenizer } from "llama-tokenizer-js";
 import Image from "next/image";
 
 // Stylizing tokens is mostly copied from gpt-tokenizer demo.
