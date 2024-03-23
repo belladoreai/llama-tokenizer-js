@@ -6,7 +6,7 @@ const nextConfig={
         unoptimized: true,
     },
     reactStrictMode: true,
-    transpilePackages: ["@repo/ui", "@repo/llama-tokenizer"]
+    transpilePackages: ["@repo/llama-tokenizer"]
 };
 
 export default nextConfig;
