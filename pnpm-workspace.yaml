@@ -1,4 +1,3 @@
 packages:
-  - "apps/*"
   - "tokenizer"
-  - "packages/*"
+  - "example-app"

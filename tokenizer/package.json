@@ -13,7 +13,7 @@
     "package.json"
   ],
   "scripts": {
-    "test": "node src/test.js"
+    "test": "node tests/test.js"
   },
   "repository": {
     "type": "git",
