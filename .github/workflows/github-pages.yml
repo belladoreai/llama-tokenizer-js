@@ -59,9 +59,7 @@ jobs:
       - name: Build with Next.js
         run: pnpm build --filter web
       - name: Add llama-tokenizer js to the example demo
-        run: |
-          cp ./packages/llama-tokenizer/src/index.js ./apps/web/out/llama-tokenizer.js
-          cp README.md ./apps/web/out/README.md
+        run: cp ./tokenizer/src/index.js ./apps/web/out/llama-tokenizer.js
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
