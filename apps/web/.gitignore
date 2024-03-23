@@ -15,6 +15,7 @@
 
 # production
 /build
+public/llama-tokenizer.js
 
 # misc
 .DS_Store

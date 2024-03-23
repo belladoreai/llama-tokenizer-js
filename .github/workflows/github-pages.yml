@@ -44,15 +44,6 @@ jobs:
         with:
           node-version: 20
           cache: "pnpm"
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-        with:
-          # Automatically inject basePath in your Next.js configuration file and disable
-          # server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized).
-          #
-          # You may remove this line if you want to manage the configuration yourself.
-          static_site_generator: next
       - name: Restore cache
         uses: actions/cache@v4
         with:
@@ -65,6 +56,8 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
       - name: Install dependencies
         run: pnpm install
+      - name: Add llama-tokenizer js to the example demo
+        run: cp ./packages/llama-tokenizer/dist/index.js ./apps/web/public/llama-tokenizer.js
       - name: Build with Next.js
         run: pnpm build --filter web
       - name: Upload artifact

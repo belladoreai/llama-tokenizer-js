@@ -25,6 +25,7 @@ coverage
 .next/
 out/
 build
+!**/example-demo/build
 dist
 
 
