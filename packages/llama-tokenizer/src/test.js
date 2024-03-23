@@ -1,14 +1,25 @@
-import { LlamaTokenizer } from ".";
+import { LlamaTokenizer } from "./index.js";
 
 const tokenizer=new LlamaTokenizer();
 
-const isEqual=(arr1: number[], arr2: number[]) => {
+/**
+ * 
+ * @param {number[]} arr1 
+ * @param {number[]} arr2 
+ * @returns {boolean}
+ */
+const isEqual=(arr1, arr2) => {
     return arr1.length===arr2.length&&arr1.every((value, index) => {
         return value===arr2[index]
     });
 }
 
-const testCase=(inputString: string, expectedTokenIds: number[]) => {
+/**
+ * 
+ * @param {string} inputString 
+ * @param {number[]} expectedTokenIds 
+ */
+const testCase=(inputString, expectedTokenIds) => {
     const actualTokens=tokenizer.encode(inputString, true, true, true)
     if (!isEqual(actualTokens, expectedTokenIds)) {
         throw `Test failed. LLaMA Tokenizer Encoder returned unexpected result: expected tokenize(${inputString}) === ${expectedTokenIds}, actual was: ${actualTokens}`

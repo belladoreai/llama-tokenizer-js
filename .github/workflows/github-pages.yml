@@ -56,10 +56,10 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
       - name: Install dependencies
         run: pnpm install
-      - name: Add llama-tokenizer js to the example demo
-        run: cp ./packages/llama-tokenizer/dist/index.js ./apps/web/public/llama-tokenizer.js
       - name: Build with Next.js
         run: pnpm build --filter web
+      - name: Add llama-tokenizer js to the example demo
+        run: cp ./packages/llama-tokenizer/dist/index.js ./apps/web/out/llama-tokenizer.js
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

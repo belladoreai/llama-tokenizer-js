@@ -10,7 +10,7 @@ Developed by [belladore.ai](https://belladore.ai)
 
 ## Features
 
-- Easy to use: 0 dependencies, code and data baked into a [single file](index.ts).
+- Easy to use: 0 dependencies, code and data baked into a [single file](src/index.js).
 - Compatible with most LLaMA models (see [Compatibility](#compatibility))
 - Optimized running time: tokenize a sentence in roughly 1ms, or 2000 tokens in roughly 20ms.
 - Optimized bundle size: 670KiB before minification and gzipping (the heaviest part of the tokenizer, merge data, has been compressed into a simple and efficient binary format, and then base64-encoded to bake it into the .js file)
@@ -66,7 +66,7 @@ llamaTokenizer.decode([3186], false, false)
 
 ## Tests
 
-See [tests](/test.ts) for example test.
+See [tests](src/test.js) for example test.
 
 The test suite is small, but it covers different edge cases very well.
 
@@ -95,8 +95,8 @@ Examples of compatible models:
 
 Incompatible LLaMA models are those which have been trained from scratch, not on top of the checkpoints released by Facebook. For example, [OpenLLaMA](https://github.com/openlm-research/open_llama) models are incompatible.
 
-When you see a new LLaMA model released, this tokenizer is mostly likely compatible with it without any modifications. If you are unsure, try it and see if the token ids are the same (compared to running the model with, for example, oobabooga webui). You can find great test input/output samples by searching for `runTests` inside `llama-tokenizer.js`.
+When you see a new LLaMA model released, this tokenizer is mostly likely compatible with it without any modifications. If you are unsure, try it and see if the token ids are the same (compared to running the model with, for example, oobabooga webui). You can find great test input/output samples inside [tests file](src/test.js).
 
-If you want to modify this library to support a new LLaMA tokenizer (new as in trained from scratch, not using the same tokenizer as most LLaMA models do), you should be able to do so by swapping the vocabulary and merge data (the 2 long variables near the end of `llama-tokenizer.js` file). This repo has [a Python script](data-conversion.py) for your convenience.
+If you want to support a new LLaMA tokenizer (new as in trained from scratch, not using the same tokenizer as most LLaMA models do), you should be able to do so by passing the vocabulary and merge data (the 2 long variables near the end of tokenizer file) to `LlamaTokenizer`. This repo has [a Python script](src/data-conversion.py) for your convenience.
 
 
