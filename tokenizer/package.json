@@ -1,0 +1,32 @@
+{
+  "name": "llama-tokenizer-js",
+  "version": "1.1.4",
+  "description": "JS tokenizer for LLaMA-based LLMs",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "src",
+    "LICENSE.md",
+    "README.md",
+    "package.json"
+  ],
+  "scripts": {
+    "test": "node src/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/belladoreai/llama-tokenizer.git"
+  },
+  "keywords": [
+    "llama",
+    "llm",
+    "tokenizer"
+  ],
+  "author": "Belladore <135602125+belladoreai@users.noreply.github.com> (https://belladore.ai/tools)",
+  "bugs": {
+    "url": "https://github.com/belladoreai/llama-tokenizer/issues"
+  },
+  "homepage": "https://github.com/belladoreai/llama-tokenizer#readme"
+}
