@@ -11,65 +11,27 @@
  * 
  */
 
-/**
- * Interface representing a node in a token tree.
- * @typedef {Object} TokenNode
- * @property {number} origPos
- * @property {number} tokenId
- * @property {TokenNode|null} prev
- * @property {TokenNode|null} next
- * @property {number} [mergePrio]
- * @property {string} [mergeToString] 
- * @property {boolean} [deleted]
- */
 
-
-/**
- * @param {string} encodedString
- */
 const base64decode=(encodedString) => {
     return atob(encodedString)
 }
 
-/**
- * 
- * @param {number} c 
- * @returns {string}
- */
 const utf8ByteToHex=(c) => {
     const hexValue=c.toString(16).toUpperCase().padStart(2, '0');
     return `<0x${hexValue}>`;
 }
 
-/**
- * @param {string} hex
- */
 const hexToUtf8Byte=(hex) => {
     const strippedHex=hex.replace(/<0x|>/g, '')
     return parseInt(strippedHex, 16);
 }
 
-/**
- * @template T - The type of elements in the priority queue.
- */
 class PriorityQueue {
     // PriorityQueue implementation is copied from https://stackoverflow.com/a/42919752 with minor refactoring
 
-    /**
-     * @type {T[]}
-     * @private
-     */
     _heap;
-
-    /**
-     * @type {(a: T, b: T) => boolean}
-     * @private
-     */
     _comparator;
 
-    /**
-     * @param {(a: T, b: T) => boolean}
-     */
     constructor(comparator=(a, b) => a>b) {
         this._heap=[];
         this._comparator=comparator;
@@ -87,9 +49,6 @@ class PriorityQueue {
         return this._heap[0];
     }
 
-    /**
-     * @param {T[]} values
-     */
     push(...values) {
         values.forEach(value => {
             this._heap.push(value);
@@ -110,9 +69,6 @@ class PriorityQueue {
         return poppedValue;
     }
 
-    /**
-     * @param {T} value 
-     */
     replace(value) {
         const replacedValue=this.peek();
         this._heap[0]=value;
@@ -120,39 +76,22 @@ class PriorityQueue {
         return replacedValue;
     }
 
-    /**
-     * @param {number} i 
-     */
     _parent(i) {
         return ((i+1)>>>1)-1;
     }
 
-    /**
-     * @param {number} i 
-     */
     _left(i) {
         return (i<<1)+1;
     }
 
-    /**
-     * @param {number} i 
-     */
     _right(i) {
         return (i+1)<<1;
     }
 
-    /**
-     * @param {number} i 
-     * @param {number} j 
-     */
     _greater(i, j) {
         return this._comparator(this._heap[i], this._heap[j]);
     }
 
-    /**
-     * @param {number} i 
-     * @param {number} j 
-     */
     _swap(i, j) {
         [this._heap[i], this._heap[j]]=[this._heap[j], this._heap[i]];
     }
@@ -178,23 +117,12 @@ class PriorityQueue {
     }
 }
 
-/**
- * 
- * @param {number[]} arr1 
- * @param {number[]} arr2 
- * @returns {boolean}
- */
 const isEqual=(arr1, arr2) => {
     return arr1.length===arr2.length&&arr1.every((value, index) => {
         return value===arr2[index]
     });
 }
 
-/**
- * @param {LlamaTokenizer} tokenizer
- * @param {string} inputString 
- * @param {number[]} expectedTokenIds 
- */
 export const testCase=(tokenizer, inputString, expectedTokenIds) => {
     const actualTokens=tokenizer.encode(inputString, true, true, true)
     if (!isEqual(actualTokens, expectedTokenIds)) {
@@ -205,11 +133,6 @@ export const testCase=(tokenizer, inputString, expectedTokenIds) => {
     }
 }
 
-/**
- * 
- * @param {LlamaTokenizer} tokenizer 
- * @returns 
- */
 const defaultTests=(tokenizer) => {
 
     // Simple test case
@@ -291,45 +214,23 @@ const defaultTests=(tokenizer) => {
 
 export class LlamaTokenizer {
 
-    /**
-     * @type {string[]}
-     */
     vocabById;
-
-    /**
-     * @type {Map<string, number>}
-     */
     vocabByString;
-
-    /**
-     * @type {Map<string, number>}
-     */
     merges;
 
     #utf8Encoder=new TextEncoder();
     #utf8Decoder=new TextDecoder('utf-8');
 
-    /**
-     * @param {string=} vocab_base64 
-     * @param {string=} merges_binary 
-     */
     constructor(vocab_base64, merges_binary) {
         this.vocabById=this.#decodeVocabulary(vocab_base64||llama2_vocab_base64);
         this.vocabByString=new Map(this.vocabById.map((tokenString, tokenId) => [tokenString, tokenId]));
         this.merges=this.#decompressMerges(merges_binary||llama2_merges_binary);
     }
 
-    /**
-     * @param {number} firstTokenId 
-     * @param {number} secondTokenId 
-     */
     #getMergeIdentifierString(firstTokenId, secondTokenId) {
         return this.vocabById[firstTokenId]+" "+this.vocabById[secondTokenId]
     }
 
-    /**
-     * @param {string} merges_binary 
-     */
     #decompressMerges(merges_binary) {
         // Base64 decode binary.
         const byteArrayString=base64decode(merges_binary)
@@ -390,9 +291,6 @@ export class LlamaTokenizer {
      *  "▁t"     // Token representing the space character followed by the "t" character.
      *  "er"      // Token representing the "e" character followed by the "r" character. Most tokens look like this.
      *  ...       // 32000 tokens
-     * 
-     * 
-     * @param {string} vocab_base64 
      */
     #decodeVocabulary(vocab_base64) {
         const byteArray=Uint8Array.from(base64decode(vocab_base64), c => c.charCodeAt(0));
@@ -400,12 +298,6 @@ export class LlamaTokenizer {
         return textDecoder.decode(byteArray).split("\n");
     }
 
-    /**
-     * @param {string} prompt 
-     * @param {boolean} add_bos_token 
-     * @param {boolean} add_preceding_space 
-     * @returns {number[]}
-     */
     #mapCharactersToTokenIds(prompt, add_bos_token, add_preceding_space) {
         const tokenIds=[]
         // Special "beginning of string" token.
@@ -444,12 +336,6 @@ export class LlamaTokenizer {
         return tokenIds
     }
 
-    /**
-     * 
-     * @param {string} prompt 
-     * @param {TokenNode} leftNode 
-     * @param {PriorityQueue<TokenNode>} mergeQueue 
-     */
     #addToMergeQueue(prompt, leftNode, mergeQueue) {
         if (!leftNode.next) {
             return;
@@ -468,14 +354,6 @@ export class LlamaTokenizer {
         }
     }
 
-    /**
-     * 
-     * @param {string} prompt 
-     * @param {boolean} [add_bos_token=true]
-     * @param {boolean} [add_preceding_space=true] 
-     * @param {boolean} [log_performance=false]
-     * @returns {number[]}
-     */
     encode(prompt, add_bos_token=true, add_preceding_space=true, log_performance=false) {
 
         let startTime=null;
@@ -591,11 +469,6 @@ export class LlamaTokenizer {
         return mergedTokenIds
     }
 
-    /**
-     * @param {number[]} tokenIds 
-     * @param {boolean} [add_bos_token=true] 
-     * @param {boolean} [add_preceding_space=true] 
-     */
     decode(tokenIds, add_bos_token=true, add_preceding_space=true) {
         const utf8byteVals=[]
         const startIndex=add_bos_token? 1:0
@@ -619,6 +492,9 @@ export class LlamaTokenizer {
         return add_preceding_space? spacesFixed.slice(1):spacesFixed
     }
 
+    /**
+     * @param {(tokenizer: LlamaTokenizer)=>boolean} tests
+     */
     runTests(tests=defaultTests) {
         tests(this);
     }
