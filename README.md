@@ -111,3 +111,19 @@ You can pass custom vocab and merge data to the tokenizer by instantiating it li
 import { llamaTokenizer } from 'llama-tokenizer-js'
 const tokenizer = new LlamaTokenizer(custom_vocab, custom_merge_data);
 ```
+
+## Repo maintenance
+
+Release steps:
+
+1. node test-llama-tokenizer.js
+2. open test.html
+3. do you need to update this README?
+4. bump version number in root package.json
+5. push tokenizer changes to github
+6. npm publish --dry-run
+7. npm publish
+8. bump version number in example-demo/package.json
+9. cd example-demo && npm run build && live-server
+10. push example demo changes to github
+11. create release in github
