@@ -108,7 +108,7 @@ If you want to modify this library to support a new LLaMA tokenizer (new as in t
 You can pass custom vocab and merge data to the tokenizer by instantiating it like this:
 
 ```
-import { llamaTokenizer } from 'llama-tokenizer-js'
+import { LlamaTokenizer } from 'llama-tokenizer-js'
 const tokenizer = new LlamaTokenizer(custom_vocab, custom_merge_data);
 ```
 
