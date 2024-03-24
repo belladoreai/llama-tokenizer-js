@@ -17,7 +17,7 @@ Developed by [belladore.ai](https://belladore.ai)
 
 ## Import
 
-Option 1: Install as an npm package and import as ES6 module
+Recommended way: Install as an npm package and import as ES6 module
 
 ```
 npm install llama-tokenizer-js
@@ -29,11 +29,15 @@ import llamaTokenizer from 'llama-tokenizer-js'
 console.log(llamaTokenizer.encode("Hello world!").length)
 ```
 
-Option 2: Load as ES6 module with `<script>` tags in your HTML
+Alternative: Load as ES6 module with `<script>` tags in your HTML
 
 ```
 <script type="module" src="https://belladoreai.github.io/llama-tokenizer-js/llama-tokenizer.js"></script>
 ```
+
+Alternative: for TypeScript projects, imports [should](https://github.com/belladoreai/llama-tokenizer-js/issues/12#issuecomment-1790073415) work now with the `types.d.ts` file, but please file an issue if I need to change something.
+
+Alternative: for CommonJS projects, [should](https://github.com/belladoreai/llama-tokenizer-js/issues/10) work with `const llamaTokenizer = await import('llama-tokenizer-js');`
 
 ## Usage
 
@@ -101,4 +105,9 @@ When you see a new LLaMA model released, this tokenizer is mostly likely compati
 
 If you want to modify this library to support a new LLaMA tokenizer (new as in trained from scratch, not using the same tokenizer as most LLaMA models do), you should be able to do so by swapping the vocabulary and merge data (the 2 long variables near the end of `llama-tokenizer.js` file). This repo has [a Python script](data-conversion.py) for your convenience.
 
+You can pass custom vocab and merge data to the tokenizer by instantiating it like this:
 
+```
+import { llamaTokenizer } from 'llama-tokenizer-js'
+const tokenizer = new LlamaTokenizer(custom_vocab, custom_merge_data);
+```
