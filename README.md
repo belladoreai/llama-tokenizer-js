@@ -35,9 +35,18 @@ Alternative: Load as ES6 module with `<script>` tags in your HTML
 <script type="module" src="https://belladoreai.github.io/llama-tokenizer-js/llama-tokenizer.js"></script>
 ```
 
-Alternative: for TypeScript projects, imports [should](https://github.com/belladoreai/llama-tokenizer-js/issues/12#issuecomment-1790073415) work now with the `types.d.ts` file, but please file an issue if I need to change something.
+Alternative: for CommonJS projects this should work:
 
-Alternative: for CommonJS projects, [should](https://github.com/belladoreai/llama-tokenizer-js/issues/10) work with `const llamaTokenizer = await import('llama-tokenizer-js');`
+```
+async function main() {
+    const llamaTokenizer=await import('llama-tokenizer-js')
+    console.log(llamaTokenizer.default.encode("Hello world!"))
+}
+
+main();
+```
+
+TypeScript support has been added (please file an issue if there are still TypeScript problems with this).
 
 ## Usage
 
