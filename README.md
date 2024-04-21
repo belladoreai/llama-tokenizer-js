@@ -1,19 +1,19 @@
 # 🦙 llama-tokenizer-js 🦙
 
-JavaScript tokenizer for LLaMA which works client-side in the browser (and also in Node).
+JavaScript tokenizer for LLaMA 1 and LLaMA 2 (I made a separate repo for LLaMA 3 [here](https://github.com/belladoreai/llama3-tokenizer-js))
+
+The tokenizer works client-side in the browser (and also in Node) (and now with TypeScript support)
 
 Intended use case is calculating token count accurately on the client-side.
 
 <a href="https://belladoreai.github.io/llama-tokenizer-js/example-demo/build/">Click here for demo</a>
 
-Developed by [belladore.ai](https://belladore.ai) with contributions from [xenova](https://github.com/xenova), [blaze2004](https://github.com/blaze2004), [imoneoi](https://github.com/imoneoi) and [ConProgramming](https://github.com/ConProgramming).
-
 ## Features
 
 - Easy to use: 0 dependencies, code and data baked into a [single file](llama-tokenizer.js).
 - Compatible with most LLaMA models (see [Compatibility](#compatibility))
-- Optimized running time: tokenize a sentence in roughly 1ms, or 2000 tokens in roughly 20ms.
-- Optimized bundle size: 670KiB before minification and gzipping (the heaviest part of the tokenizer, merge data, has been compressed into a simple and efficient binary format, and then base64-encoded to bake it into the .js file)
+- Optimized running time (highly efficient BPE implementation)
+- Optimized bundle size: 670KiB before minification and gzipping (the data has been compressed into a simple and efficient binary format, and then base64-encoded to bake it into the .js file)
 
 ## Import
 
@@ -45,8 +45,6 @@ async function main() {
 
 main();
 ```
-
-TypeScript support has been added (please file an issue if there are still TypeScript problems with this).
 
 ## Usage
 
@@ -136,3 +134,7 @@ Release steps:
 9. cd example-demo && npm run build && live-server
 10. push example demo changes to github
 11. create release in github
+
+## Who did this
+
+Developed by [belladore.ai](https://belladore.ai) with contributions from [xenova](https://github.com/xenova), [blaze2004](https://github.com/blaze2004), [imoneoi](https://github.com/imoneoi) and [ConProgramming](https://github.com/ConProgramming).
