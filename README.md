@@ -131,7 +131,7 @@ Release steps:
 6. npm publish --dry-run
 7. npm publish
 8. bump version number in example-demo/package.json
-9. cd example-demo && npm run build && live-server
+9. cd example-demo && npm install && npm run build && live-server
 10. push example demo changes to github
 11. create release in github
 
