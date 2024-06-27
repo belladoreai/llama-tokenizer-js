@@ -98,6 +98,8 @@ class PriorityQueue {
     }
 }
 
+const BOS_TOKEN_ID = 1
+
 export class LlamaTokenizer {
 
     vocabById;
@@ -191,7 +193,7 @@ export class LlamaTokenizer {
         const tokenIds = []
         // Special "beginning of string" token.
         if (add_bos_token) {
-            tokenIds.push(1)
+            tokenIds.push(BOS_TOKEN_ID)
         }
         // Special "preceding space" added to beginning of prompt.
         if (add_preceding_space) {
@@ -353,7 +355,7 @@ export class LlamaTokenizer {
 
     decode(tokenIds, add_bos_token=true, add_preceding_space=true) {
         const utf8byteVals = []
-        const startIndex = add_bos_token ? 1 : 0
+        const startIndex = add_bos_token && tokenIds[0] === BOS_TOKEN_ID ? 1 : 0
         for (let i=startIndex; i<tokenIds.length; i++) {
             const tokenId = tokenIds[i]
             const tokenString = this.vocabById[tokenId]
@@ -371,7 +373,16 @@ export class LlamaTokenizer {
         const decodedString = this.utf8Decoder.decode(uint8Array)
         const spacesFixed = decodedString.replaceAll(this.vocabById[29871], " ")
         // Note that preceding space must be removed here at string level, not earlier at token level, because multiple consecutive spaces are represented as single token.
-        return add_preceding_space ? spacesFixed.slice(1) : spacesFixed
+        if (!add_preceding_space) {
+            return spacesFixed
+        }
+        if (spacesFixed[0] === ' ') {
+            return spacesFixed.slice(1)
+        }
+        // If we are here then we are supposed to remove a preceding space, but the string doesn't begin with a space.
+        // This can happen if the user is calling this function incorrectly, e.g. feeding it a sequence of tokens which (when decoded) does not begin with a space, while asking us to remove the preceding space.
+        // It might be reasonable to throw an error here, but I think this is not serious enough to throw an error.
+        return spacesFixed
     }
 
     defaultTests(tokenizer) {
@@ -379,14 +390,21 @@ export class LlamaTokenizer {
         function isEqual(arr1, arr2) {
             return arr1.length === arr2.length && arr1.every(function(value, index) { return value === arr2[index]})
         }
+
+        function testDecodeOnly(inputTokenIds, expectedOutputString, add_bos_token=true, add_preceding_space=true) {
+            const actualOutputString = tokenizer.decode(inputTokenIds, add_bos_token, add_preceding_space)
+            if (actualOutputString !== expectedOutputString) {
+                throw Error(`Decode test failed. Expected ${expectedOutputString}, actual was: ${actualOutputString}`)
+            }
+        }
     
         function testCase(inputString, expectedTokenIds) {
             const actualTokens = tokenizer.encode(inputString, true, true, true)
             if (!isEqual(actualTokens, expectedTokenIds)) {
-                throw `Test failed. LLaMA Tokenizer Encoder returned unexpected result: expected tokenize(${inputString}) === ${expectedTokenIds}, actual was: ${actualTokens}`
+                throw Error(`Test failed. LLaMA Tokenizer Encoder returned unexpected result: expected tokenize(${inputString}) === ${expectedTokenIds}, actual was: ${actualTokens}`)
             }
             if (inputString !== tokenizer.decode(actualTokens)) {
-                throw `Test failed. LLaMA Tokenizer Decoder returned unexpected result: expected decode(${actualTokens}) === ${inputString}, actual was: ${decode(actualTokens)}`
+                throw Error(`Test failed. LLaMA Tokenizer Decoder returned unexpected result: expected decode(${actualTokens}) === ${inputString}, actual was: ${decode(actualTokens)}`)
             }
         }
             
@@ -416,6 +434,16 @@ export class LlamaTokenizer {
         // Consecutive UTF-8 multipoint characters that are NOT found in a vocabulary and use DIFFERENT number of bytes
         testCase('🦙Ꙋ',                              [1, 29871,  243,    162,    169,    156,    237,    156,    141])
         testCase('Ꙋ🦙',                              [1, 29871,  237,    156,    141,    243,    162,    169,    156])
+
+        // Decode function parameter tests
+        testDecodeOnly([1, 2646,   1327,   287],    "grabbed",      true,   true)
+        testDecodeOnly([1, 2646,   1327,   287],    "<s> grabbed",  false,  false) // Invalid params for given tokenids
+        testDecodeOnly([1, 2646,   1327,   287],    " grabbed",  true,  false)
+        testDecodeOnly([1, 2646,   1327,   287],    "<s> grabbed",  false,  true) // Invalid params for given tokenids
+        testDecodeOnly([2646,   1327,   287],       "grabbed",      true,   true) // Invalid params for given tokenids
+        testDecodeOnly([2646,   1327,   287],       " grabbed",      false,  false)
+        testDecodeOnly([2646,   1327,   287],       " grabbed",      true,  false) // Invalid params for given tokenids
+        testDecodeOnly([2646,   1327,   287],       "grabbed",      false,  true)
     
         // Larger text input with various special characters sprinkled in
         testCase("The llama (/ˈlɑːmə/; 🦙Spanish pronunciation: [ˈʎama]) (Lama glama) is a domesticated South American camelid, widely used as a meat and pack animal by Andean cultures since the Pre-Columbian era. Llamas are social animals and live with others as a herd. Their wool is soft and contains only a small amount of lanolin.[2] Llamas can learn simple tasks after a few repetitions. When using a pack, they can carry about 25 to 30% of their body weight for 8 to 13 km (5–8 miles).[3] The name llama (in the past also spelled \"lama\" or \"glama\") was adopted by European settlers from native Peruvians.[4] The ancestors of llamas are thought to have originated from the Great Plains of North America about 40 million years ago, and subsequently migrated to South America about three million years ago during the Great American Interchange. By the end of the last ice age (10,000–12,000 years ago), camelids were extinct in North America.[3] As of 2007, there were over seven million llamas and alpacas in South America and over 158,000 llamas and 100,000Ꙋ🦙 alpacas, descended from progenitors imported late in the 20th century, in the United States and Canada.[5] In Aymara mythology, llamas are important beings. The Heavenly Llama is said to drink water from the ocean and urinates as it rains.[6] According to Aymara eschatology, llamas will return to the water springs and lagoons where they come from at the end of time.[6]",

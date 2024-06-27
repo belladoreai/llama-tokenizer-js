@@ -1,6 +1,6 @@
 {
   "name": "llama-tokenizer-js",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "JS tokenizer for LLaMA-based LLMs",
   "main": "llama-tokenizer.js",
   "types": "types.d.ts",
